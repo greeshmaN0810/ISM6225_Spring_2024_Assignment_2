@@ -48,13 +48,13 @@ namespace ISM6225_Spring_2024_Assignment_2
 
             //Question 6:
             Console.WriteLine("Question 6:");
-            int[] nums5 = { 3,6,9,1 };
+            int[] nums5 = { 3, 6, 9, 1 };
             int maxGap = MaximumGap(nums5);
             Console.WriteLine(maxGap);
 
             //Question 7:
             Console.WriteLine("Question 7:");
-            int[] nums6 = { 2,1,2 };
+            int[] nums6 = { 2, 1, 2 };
             int largestPerimeterResult = LargestPerimeter(nums6);
             Console.WriteLine(largestPerimeterResult);
 
@@ -95,12 +95,26 @@ namespace ISM6225_Spring_2024_Assignment_2
         nums is sorted in non-decreasing order.
         */
 
+
         public static int RemoveDuplicates(int[] nums)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // Here it's checking if the array is 0, if true it can return 0 as there are no duplicates to remove
+                if (nums.Length == 0) return 0;
+                // Initializing index to 1 (second element)
+                int index = 1;
+
+                //Iteration starting from the 2nd element
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    //Here if the current element is not equal to the previous one, it's unique, so we add it to the array. 
+                    if (nums[i] != nums[i - 1])
+                    {
+                        nums[index++] = nums[i];
+                    }
+                }
+                return index;
             }
             catch (Exception)
             {
@@ -130,12 +144,30 @@ namespace ISM6225_Spring_2024_Assignment_2
         -231 <= nums[i] <= 231 - 1
         */
 
+
+
         public static IList<int> MoveZeroes(int[] nums)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                //Initializing the index
+                int index = 0;
+
+                //Iterating through the array 
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    //If the number in the index is not equal to zero we move it to the array
+                    if (nums[i] != 0)
+                    {
+                        nums[index++] = nums[i];
+                    }
+                }
+                // Here we fill the remaining index values with 0
+                for (int i = index; i < nums.Length; i++)
+                {
+                    nums[i] = 0;
+                }
+                return nums;
             }
             catch (Exception)
             {
@@ -185,8 +217,43 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                //Sorting the array
+                Array.Sort(nums);
+
+                //Creating a list to store the triplets
+                IList<IList<int>> result = new List<IList<int>>();
+
+                //Iterating through the array, leaving behind last 2 elements
+                for (int i = 0; i < nums.Length - 2; i++)
+                {
+                    //To not process the duplicates
+                    if (i == 0 || (i > 0 && nums[i] != nums[i - 1]))
+                    {
+                        //Defining the pointers
+                        int lo = i + 1, hi = nums.Length - 1, sum = 0 - nums[i];
+
+                        //Searching for pairs that sum up to 0
+                        while (lo < hi)
+                        {
+                            //If the sum on pair is equal to 0, triplet is found
+                            if (nums[lo] + nums[hi] == sum)
+                            {
+                                //Adding triplets to the list
+                                result.Add(new List<int> { nums[i], nums[lo], nums[hi] });
+
+                                //Skipping duplicates
+                                while (lo < hi && nums[lo] == nums[lo + 1]) lo++;
+                                while (lo < hi && nums[hi] == nums[hi - 1]) hi--;
+                                lo++; hi--;
+                            }
+                            else if (nums[lo] + nums[hi] < sum) lo++;
+                            else hi--;
+                        }
+                    }
+                }
+
+                //Returning the result of the triplets
+                return result;
             }
             catch (Exception)
             {
@@ -220,14 +287,36 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                //Initialising to store maximum and current consecutive ones
+                int maxCount = 0;
+                int currentCount = 0;
+
+                //Interating through the array nums
+                foreach (int num in nums)
+                {
+                    //If the current element is 1, the consecutive ones gets incremented
+                    if (num == 1)
+                    {
+                        currentCount++;
+                        //Here we are updating max count, when current count is greater
+                        maxCount = Math.Max(maxCount, currentCount);
+                    }
+                    else
+                    {
+                        //If the current element is not 1, reset the current consecutive count
+                        currentCount = 0;
+                    }
+                }
+                //Returning the max count
+                return maxCount;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+
 
         /*
 
@@ -256,8 +345,24 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                //Initialising variables
+                int decimalNumber = 0;
+                int baseValue = 1;
+
+                //Iteration till binary number becomes 0
+                while (binary > 0)
+                {
+                    //Taking the last digit of the binary number
+                    int lastDigit = binary % 10;
+                    binary = binary / 10;
+
+                    //Updating the decimal number by adding the last digit
+                    decimalNumber += lastDigit * baseValue;
+                    //Updating the baseValue
+                    baseValue *= 2;
+                }
+                //Return the decimal number
+                return decimalNumber;
             }
             catch (Exception)
             {
@@ -294,14 +399,57 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums.Length < 2)
+                    return 0;
+
+                // Here we are finding the min and max elements in the array.
+                int min = nums[0], max = nums[0];
+                foreach (int num in nums)
+                {
+                    min = Math.Min(min, num);
+                    max = Math.Max(max, num);
+                }
+
+                // Calculating the size of each bucket
+                int bucketSize = Math.Max(1, (max - min) / (nums.Length - 1));
+
+                // Calculating the number of buckets needed
+                int numBuckets = (max - min) / bucketSize + 1;
+
+                // Creating buckets
+                List<int>[] buckets = new List<int>[numBuckets];
+                for (int i = 0; i < numBuckets; i++)
+                {
+                    buckets[i] = new List<int>();
+                }
+
+                // Distributing elements into buckets
+                foreach (int num in nums)
+                {
+                    int bucketIndex = (num - min) / bucketSize;
+                    buckets[bucketIndex].Add(num);
+                }
+
+                // Iterating through buckets to find the max gap
+                int previousMax = min, maxGap = 0;
+                foreach (var bucket in buckets)
+                {
+                    if (bucket.Count == 0)
+                        continue;
+
+                    int currentMin = bucket.Min();
+                    maxGap = Math.Max(maxGap, currentMin - previousMax);
+                    previousMax = bucket.Max();
+                }
+
+                return maxGap;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
 
         /*
 
@@ -334,7 +482,20 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
+                //Sort the array
+                Array.Sort(nums);
+
+                //Iterate through the sorted array from the 3rd element
+                for (int i = nums.Length - 3; i >= 0; i--)
+                {
+                    //Here we are checking if the 3 elements can form a triangle
+                    if (nums[i] + nums[i + 1] > nums[i + 2])
+                    {
+                        //If a triangle is formed, return the perimeter
+                        return nums[i] + nums[i + 1] + nums[i + 2];
+                    }
+                }
+                //If no valid triangle can be formed, return 0
                 return 0;
             }
             catch (Exception)
@@ -380,7 +541,7 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         1 <= s.length <= 1000
         1 <= part.length <= 1000
-        s​​​​​​ and part consists of lowercase English letters.
+        s and part consists of lowercase English letters.
 
         */
 
@@ -388,8 +549,15 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return "";
+                // Iterating till the substring part is no longer found in the string s
+                while (s.Contains(part))
+                {
+                    int index = s.IndexOf(part);
+                    // Removing the occurrence of part from s starting at the found index
+                    s = s.Remove(index, part.Length);
+                }
+                // Return the modified string after removing all occurrences of part
+                return s;
             }
             catch (Exception)
             {
